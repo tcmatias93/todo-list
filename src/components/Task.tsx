@@ -13,7 +13,7 @@ export default function Task({ task }: TaskProps) {
   const [openModalEdit, setOpenModalEdit] = useState<boolean>(false)
   const [taskEdit, setTaskEdit] = useState<string>(task.task)
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false)
-  const [isPendin, setIsPendin] = useState<boolean>(task.status === 'finalizado' ? false : true)
+  const [isPendin, setIsPendin] = useState<boolean>(task.status === 'completada' ? false : true)
   const router = useRouter()
 
   console.log(isPendin)
@@ -73,7 +73,7 @@ export default function Task({ task }: TaskProps) {
         },
         body: JSON.stringify({
           taskId,
-          updatedTaskData: { status: isPendin == true ? "finalizado" : 'pendiente' }
+          updatedTaskData: { status: isPendin == true ? "completada" : 'pendiente' }
         }),
       });
 
@@ -107,7 +107,7 @@ export default function Task({ task }: TaskProps) {
         </div>
       </td>
       <td>
-        {isPendin ? 'pendiente' : 'Finalizada'}
+        {isPendin ? 'pendiente' : 'completada'}
       </td>
       <th className=' flex gap-4'>
         <FiEdit cursor="pointer" className=' text-blue-500' size={25} onClick={() => setOpenModalEdit(true)} />
