@@ -25,7 +25,8 @@ export default function AddTask() {
         <form onSubmit={handleSubmitNewTask}>
           <h2 className=" font-bold text-lg">Agregar nueva tarea</h2>
           <div className=" modal-action">
-            <input value={newTask} onChange={(e) => setNewTask(e.target.value)} type="text" placeholder="Agregar tarea" className=" input input-bordered w-full" />
+
+
             <button type="submit" className="btn" >Agregar</button>
           </div>
         </form>

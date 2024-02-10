@@ -11,12 +11,12 @@ import { useRouter } from 'next/navigation'
 export default function Task({ task }: TaskProps) {
 
   const [openModalEdit, setOpenModalEdit] = useState<boolean>(false)
-  const [taskEdit, setTaskEdit] = useState<string>(task)
+  const [taskEdit, setTaskEdit] = useState<string>(task.task)
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false)
-  const [isPendin, setIsPendin] = useState<boolean>(true)
+  const [isPendin, setIsPendin] = useState<boolean>(task.status === 'pendiente' ? true : false)
   const router = useRouter()
   return (
-    <tr key={task}>
+    <tr key={task.id}>
       <th>
         <label>
           <input type="checkbox" className="checkbox" onClick={() => setIsPendin(!isPendin)} />
@@ -25,7 +25,7 @@ export default function Task({ task }: TaskProps) {
       <td>
         <div className="flex items-center gap-3">
           <div>
-            <div className="font-bold">Cortar Manzana</div>
+            <div className="font-bold">{task.task}</div>
           </div>
         </div>
       </td>
@@ -39,7 +39,7 @@ export default function Task({ task }: TaskProps) {
             <h2 className='font-bold text-lg'>Editar Tarea</h2>
             <div className=" modal-action">
               <input value={taskEdit} onChange={(e) => setTaskEdit(e.target.value)} type="text" placeholder="Agregar tarea" className=" input input-bordered w-full" />
-              <button type="submit" className="btn" >Agregar</button>
+              <button type="submit" className="btn" >Cambiar</button>
             </div>
           </form>
         </Modal>

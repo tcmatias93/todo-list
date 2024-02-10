@@ -3,6 +3,9 @@ import { TodoListProps } from '@/types/todoList'
 import Task from './Task'
 
 export default function TodoList({ tasks }: TodoListProps) {
+
+  const listTasks = tasks.tasks
+
   return (
     <div className="overflow-x-auto">
       <table className="table">
@@ -21,27 +24,10 @@ export default function TodoList({ tasks }: TodoListProps) {
         </thead>
         <tbody>
           {/* row  */}
-          <tr>
-            <th>
-              <label>
-                <input type="checkbox" className="checkbox" />
-              </label>
-            </th>
-            <td>
-              <div className="flex items-center gap-3">
-                <div>
-                  <div className="font-bold">Hart Hagerty</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              Zemlak, Daniel and Leannon
-            </td>
-            <th>
-              <button className="btn btn-ghost btn-xs">details</button>
-            </th>
-          </tr>
-          <Task />
+          {listTasks.map((task) => (
+            <Task key={task.id} task={task} />
+          ))}
+
         </tbody>
 
 
