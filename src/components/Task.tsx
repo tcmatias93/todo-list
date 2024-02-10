@@ -16,9 +16,6 @@ export default function Task({ task }: TaskProps) {
   const [isPendin, setIsPendin] = useState<boolean>(task.status === 'completada' ? false : true)
   const router = useRouter()
 
-  console.log(isPendin)
-
-
   const hanleDeteleTask: FormEventHandler<HTMLFormElement> = async (taskId: String) => {
     console.log('deletedTask:', taskId);
     try {
@@ -87,6 +84,7 @@ export default function Task({ task }: TaskProps) {
       console.error(error);
     }
   };
+
 
 
   return (
