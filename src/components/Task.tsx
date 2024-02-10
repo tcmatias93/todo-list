@@ -13,8 +13,10 @@ export default function Task({ task }: TaskProps) {
   const [openModalEdit, setOpenModalEdit] = useState<boolean>(false)
   const [taskEdit, setTaskEdit] = useState<string>(task.task)
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false)
-  const [isPendin, setIsPendin] = useState<boolean>(task.status === 'pendiente' ? true : false)
+  const [isPendin, setIsPendin] = useState<boolean>(task.status === 'finalizado' ? false : true)
   const router = useRouter()
+
+  console.log(isPendin)
 
 
   const hanleDeteleTask: FormEventHandler<HTMLFormElement> = async (taskId: String) => {
@@ -38,12 +40,63 @@ export default function Task({ task }: TaskProps) {
     }
   };
 
+  const handleUpdateTask: FormEventHandler<HTMLFormElement> = async (taskId: string) => {
+    try {
+      const res = await fetch(`http://localhost:3000/api/tasks`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          taskId,
+          updatedTaskData: { task: taskEdit }
+        }),
+      });
+
+      if (res.ok) {
+
+        router.refresh();
+      } else {
+        throw new Error("Fallo la actualización de la tarea");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleUpdateStatus: FormEventHandler<HTMLFormElement> = async (taskId: string) => {
+    try {
+      const res = await fetch(`http://localhost:3000/api/tasks`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          taskId,
+          updatedTaskData: { status: isPendin == true ? "finalizado" : 'pendiente' }
+        }),
+      });
+
+      if (res.ok) {
+
+        router.refresh();
+      } else {
+        throw new Error("Fallo la actualización de la tarea");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
   return (
     <tr key={task.id}>
       <th>
         <label>
-          <input type="checkbox" className="checkbox" onClick={() => setIsPendin(!isPendin)} />
+          <input type="checkbox" className="checkbox" checked={!isPendin} onClick={() => {
+            setIsPendin(!isPendin);
+            handleUpdateStatus(task._id);
+          }} />
         </label>
       </th>
       <td>
@@ -63,7 +116,7 @@ export default function Task({ task }: TaskProps) {
             <h2 className='font-bold text-lg'>Editar Tarea</h2>
             <div className=" modal-action">
               <input value={taskEdit} onChange={(e) => setTaskEdit(e.target.value)} type="text" placeholder="Agregar tarea" className=" input input-bordered w-full" />
-              <button type="submit" className="btn" >Cambiar</button>
+              <button onClick={() => handleUpdateTask(task._id)} type="submit" className="btn" >Cambiar</button>
             </div>
           </form>
         </Modal>

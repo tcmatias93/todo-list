@@ -38,3 +38,32 @@ export async function DELETE(req: NextRequest) {
     );
   }
 }
+
+export async function PUT(req: NextRequest) {
+  const { taskId, updatedTaskData } = await req.json();
+  await connectMongoDB();
+
+  try {
+    const updatedTask = await Task.findByIdAndUpdate(taskId, updatedTaskData, {
+      new: true,
+    });
+
+    if (!updatedTask) {
+      return NextResponse.json(
+        { message: "Tarea no encontrada" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: "Tarea actualizada", updatedTask },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { message: "Error al actualizar la tarea" },
+      { status: 500 }
+    );
+  }
+}
