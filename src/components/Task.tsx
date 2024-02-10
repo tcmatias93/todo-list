@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { FormEventHandler, useState } from 'react'
 import { TaskProps } from '@/types/task'
 import { FiEdit, FiTrash2 } from 'react-icons/fi'
 import Modal from './Modal'
@@ -15,6 +15,30 @@ export default function Task({ task }: TaskProps) {
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false)
   const [isPendin, setIsPendin] = useState<boolean>(task.status === 'pendiente' ? true : false)
   const router = useRouter()
+
+
+  const hanleDeteleTask: FormEventHandler<HTMLFormElement> = async (taskId: String) => {
+    console.log('deletedTask:', taskId);
+    try {
+      const res = await fetch('http://localhost:3000/api/tasks', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ taskId }),
+      });
+
+      if (res.ok) {
+        router.refresh();
+      } else {
+        throw new Error("Fallo la eliminación de la tarea");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
   return (
     <tr key={task.id}>
       <th>
@@ -47,7 +71,7 @@ export default function Task({ task }: TaskProps) {
         <Modal modalOpen={openModalDelete} setModalOpen={setOpenModalDelete} >
           <h3 className='text-lg'>Seguro que quiere eliminar la tarea</h3>
           <div className=' modal-action'>
-            <button className='btn'>Si</button>
+            <button onClick={() => hanleDeteleTask(task._id)} className='btn'>Si</button>
           </div>
         </Modal>
       </th>
